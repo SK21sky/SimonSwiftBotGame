@@ -1,3 +1,4 @@
+Works
 import swiftbot.*;
 
 import java.util.Random;
@@ -30,13 +31,13 @@ public class SimonSwiftBotGame {
             int[] sequence = generateSequence(round);
             displaySequence(sequence);
 
-            // User input using buttons
-            if (!getUserInputWithButtons(sequence)) {
+            // User input
+            if (!getUserInput(sequence)) {
                 gameOver(score);
                 break;
             }
 
-            // Check if it's time to prompt user to continue or quit
+            // Check if it's time to prompt user to quit or continue
             if (round % NUM_ROUNDS_TO_PROMPT == 0) {
                 if (!promptToContinue()) {
                     endGame(score);
@@ -75,50 +76,18 @@ public class SimonSwiftBotGame {
         }
     }
 
-    // Get user input using buttons
-    private static boolean getUserInputWithButtons(int[] sequence) {
-        System.out.println("Your turn! Enter the sequence using buttons (A, B, X, Y):");
+    // Get user input and check if it matches the sequence
+    private static boolean getUserInput(int[] sequence) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Your turn! Enter the sequence:");
 
         for (int color : sequence) {
-            Button button = waitForButtonPress();
-            int buttonColor = mapButtonToColor(button);
-
-            if (buttonColor != color) {
+            int userInput = scanner.nextInt();
+            if (userInput != color) {
                 return false;  // Incorrect input
             }
         }
         return true;  // Correct input
-    }
-
-    // Wait for a button press and return the pressed button
-    private static Button waitForButtonPress() {
-        while (true) {
-            if (swiftBot.isButtonPressed(Button.A)) {
-                return Button.A;
-            } else if (swiftBot.isButtonPressed(Button.B)) {
-                return Button.B;
-            } else if (swiftBot.isButtonPressed(Button.X)) {
-                return Button.X;
-            } else if (swiftBot.isButtonPressed(Button.Y)) {
-                return Button.Y;
-            }
-        }
-    }
-
-    // Map button to color
-    private static int mapButtonToColor(Button button) {
-        switch (button) {
-            case A:
-                return 0;  // Red
-            case B:
-                return 1;  // Green
-            case X:
-                return 2;  // Blue
-            case Y:
-                return 3;  // Yellow
-            default:
-                return -1; // Invalid color
-        }
     }
 
     // Blink the LED corresponding to the color
